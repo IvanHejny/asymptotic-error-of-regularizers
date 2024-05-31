@@ -272,39 +272,6 @@ def prox_slope_b_0(b_0, y, lambdas):
     solution = u_reconstruction(b_0, prox_k_clusters)  # [2.5, 1.5, 2.5, 1.5, 32.5, 32.5, -3.0, -1.0]
     return solution
 
-def pgd_slope_b_0_ISTA(C, W, b_0, lambdas, t, n):
-    """Minimizes: 1/2 u^T*C*u-u^T*W+J'_{lambda}(b^0; u),
-     where J'_{lambda}(b^0; u) is the directional SLOPE derivative
-       Parameters
-       ----------
-       C: np.array
-           covariance matrix of the data
-       W: np.array
-           p-dimensional vector, in our paper it arises from normal N(0, \sigma^2 * C ),
-           where \sigma^2 is variance of the noise
-       b_0: np.array
-           pattern vector of the true signal
-       lambdas : np.array
-           vector of regularization weights
-       t: np.float
-           step size
-       n: integer
-           number of steps before termination
-
-       Returns
-       -------
-       array
-           the unique solution to the minimization problem, given by a vector u.
-       """
-    #W = [np.float(i) for i in W]
-    #lambdas = [np.float(i) for i in lambdas]
-    u_0 = np.zeros(len(b_0))
-    prox_step = u_0
-    stepsize_t = np.float64(t)
-    for i in range(n):
-        grad_step = prox_step - stepsize_t * (C @ prox_step - W)
-        prox_step = prox_slope_b_0(b_0, grad_step, lambdas * stepsize_t)
-    return(prox_step)
 
 def pgd_slope_b_0_FISTA(C, W, b_0, lambdas, n=None, t=None, tol=1e-4, max_iter=2000):
     """Minimizes: 1/2 u^T*C*u-u^T*W+J'_{lambda}(b^0; u),
@@ -411,7 +378,7 @@ def pattern_matrix(vector):
 
   return  (pattern_matrix @ sign_matrix).T  # .astype(int) convert to integer type
 
-#print('pattern matrix:\n', pattern_matrix(np.array([0, 2, 0, -2, 2, 1, 1])))
+print('pattern matrix:\n', pattern_matrix(np.array([0, 2, 0, -2, 2, 1, 1])))
 
 def pattern_matrix_Lasso(vector):
   """Creates a Lasso pattern matrix for the input vector.
@@ -514,7 +481,6 @@ def proj_onto_pattern_space(vector):
     """
     U = pattern_matrix(vector)
     return U @ np.linalg.inv(U.T @ U) @ U.T
-
 
 def lin_lambdas(p):
     """
