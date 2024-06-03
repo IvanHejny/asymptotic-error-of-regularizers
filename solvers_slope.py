@@ -378,7 +378,7 @@ def pattern_matrix(vector):
 
   return  (pattern_matrix @ sign_matrix).T  # .astype(int) convert to integer type
 
-print('pattern matrix:\n', pattern_matrix(np.array([0, 2, 0, -2, 2, 1, 1])))
+#print('pattern matrix:\n', pattern_matrix(np.array([0, 2, 0, -2, 2, 1, 1])))
 
 def pattern_matrix_Lasso(vector):
   """Creates a Lasso pattern matrix for the input vector.
@@ -515,4 +515,8 @@ def bh_lambdas(p, q=0.05):
     randnorm = stats.norm(loc=0, scale=1)
     lambdas = randnorm.ppf(1 - np.arange(1, p + 1) * q / (2 * p))
     return lambdas / (np.sum(lambdas) / p)
+
+
+def comp_sym_corr(rho, p):
+    return (1-rho)*np.identity(p)+rho*np.ones((p, p))
 
