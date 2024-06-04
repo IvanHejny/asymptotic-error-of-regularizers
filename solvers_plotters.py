@@ -1,7 +1,6 @@
-import numpy as np
 from solvers_slope import*
 from solvers_glasso import*
-#import math
+
 import matplotlib.pyplot as plt
 from scipy.interpolate import make_interp_spline
 from scipy.interpolate import PchipInterpolator

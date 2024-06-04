@@ -1,4 +1,4 @@
-from plotters import *
+from solvers_plotters import *
 
 
 compound_block = comp_sym_corr(0.8, 3)
@@ -20,7 +20,7 @@ plot_performance(b_0=np.array([0, 0, 1, 0]),
                  Cov=0.4**2*np.array([[1, 0, rho, 0], [0, 1, 0, rho], [rho, 0, 1, 0], [0, rho, 0, 1]]),
                  flasso=True,
                  A_flasso=Acustom(a=np.ones(4), b=1 * np.ones(3)),
-                 reducedOLS=False,
+                 reducedOLS=False, # set True for reduced OLS
                  sigma=0.4,
                  smooth=True,
                  legend=True)
@@ -49,7 +49,7 @@ plot_performance(b_0=np.array([0, 0, 0, 1, 1, 1, 3, 3, 3, 2, 2, 2]),  # np.array
                  A_flasso=A12flasso,
                  glasso=True,
                  A_glasso=A12concave,
-                 reducedOLS=False,
+                 reducedOLS=False, # set True for reduced OLS
                  sigma=0.2,
                  smooth=True,
                  tol=1e-4

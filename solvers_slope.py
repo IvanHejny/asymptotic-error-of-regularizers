@@ -1,6 +1,5 @@
 import numpy as np
-from numpy.linalg import norm
-from scipy import sparse, stats
+from scipy import stats
 
 '''
 #Some functions in this file are using the code from https://github.com/jolars/pyslope.git
@@ -28,6 +27,7 @@ SOFTWARE.
 '''
 
 
+# Functions used in proximal operator for directional SLOPE derivative given by prox_slope_b_0
 def prox_slope_isotonic(y, lambdas):
     """Compute the prox operator for the directional SLOPE derivative, with b^0 = positive constant: prox_{t*J_b^0,lambda}(y).
 
@@ -273,6 +273,7 @@ def prox_slope_b_0(b_0, y, lambdas):
     return solution
 
 
+# FISTA algorithm for the asymptotic error of SLOPE
 def pgd_slope_b_0_FISTA(C, W, b_0, lambdas, n=None, t=None, tol=1e-4, max_iter=2000):
     """Minimizes: 1/2 u^T*C*u-u^T*W+J'_{lambda}(b^0; u),
      where J'_{lambda}(b^0; u) is the directional SLOPE derivative
@@ -329,6 +330,7 @@ def pgd_slope_b_0_FISTA(C, W, b_0, lambdas, n=None, t=None, tol=1e-4, max_iter=2
     return (u_k)
 
 
+# Pattern and pattern matrices
 def pattern(u):
     """
     Calculate the SLOPE pattern of a vector: rank(abs(u_i)) * sgn(u_i).
@@ -378,8 +380,6 @@ def pattern_matrix(vector):
 
   return  (pattern_matrix @ sign_matrix).T  # .astype(int) convert to integer type
 
-#print('pattern matrix:\n', pattern_matrix(np.array([0, 2, 0, -2, 2, 1, 1])))
-
 def pattern_matrix_Lasso(vector):
   """Creates a Lasso pattern matrix for the input vector.
 
@@ -398,8 +398,6 @@ def pattern_matrix_Lasso(vector):
       row_index = np.nonzero(vector)[0][i]
       pattern_matrix[row_index, i] = 1  # Set 1s for matching values in each cluste
   return  sign_matrix @ pattern_matrix   # .astype(int) convert to integer type
-#print('pattern_matrix_Lasso:\n', pattern_matrix_Lasso(np.array([0, 2, 0, -2, 2, 1, 1])))
-#print(np.nonzero(np.array([0, 2, 0, -2, 2, 1, 1])))
 
 def consecutive_cluster_sizes(b0):
   """
@@ -429,7 +427,6 @@ def consecutive_cluster_sizes(b0):
   cluster_lengths = cluster_ends - cluster_starts
 
   return cluster_lengths
-#print('cluster_lengths:', consecutive_cluster_sizes(np.array([1, 1, 1, 0, 0, 1, 1, 3, 3, 3, 3])))
 
 def pattern_matrix_FLasso(vector):
   """Creates a Fused Lasso pattern matrix for the input vector.
@@ -457,19 +454,6 @@ def pattern_matrix_FLasso(vector):
   zero_cols = np.all(pattern_matrix_Flasso == 0, axis=0)
   return  pattern_matrix_Flasso[:, ~ zero_cols] # removes zero columns
 
-'''
-print('pattern_matrix_Lasso:\n', pattern_matrix_Lasso(np.array([1,1,0,2,0,2])))
-print('pattern_matrix_FusedLasso:\n', pattern_matrix_FLasso(np.array([1,1,0,2,0,2])))
-print('pattern_matrix_SLOPE:\n', pattern_matrix(np.array([1,1,0,2,0,2])))
-
-print('pattern_matrix_Lasso:\n', pattern_matrix_Lasso(np.array([0, 2, 0, -2, 2, 1, 1])))
-print('pattern_matrix_FusedLasso:\n', pattern_matrix_FLasso(np.array([0, 2, 0, -2, 2, 1, 1])))
-print('pattern_matrix_SLOPE:\n', pattern_matrix(np.array([0, 2, 0, -2, 2, 1, 1])))
-
-print('pattern_matrix_Lasso:\n', pattern_matrix_Lasso(np.array([1, 0, 1, 0])))
-print('pattern_matrix_FusedLasso:\n', pattern_matrix_FLasso(np.array([1, 0, 1, 0])))
-print('pattern_matrix_SLOPE:\n', pattern_matrix(np.array([1, 0, 1, 0])))
-'''
 def proj_onto_pattern_space(vector):
     """Projection matrix onto the (SLOPE) pattern space of some vector
 
