@@ -282,8 +282,8 @@ def pgd_slope_b_0_FISTA(C, W, b_0, lambdas, n=None, t=None, tol=1e-4, max_iter=2
        C: np.array
            covariance matrix of the data
        W: np.array
-           p-dimensional vector, in our paper it arises from normal N(0, \sigma^2 * C ),
-           where \sigma^2 is variance of the noise
+           p-dimensional vector, in our paper it arises from normal N(0, sigma^2 * C ),
+           where sigma^2 is variance of the noise
        b_0: np.array
            pattern vector of the true signal
        lambdas : np.array
