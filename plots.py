@@ -20,7 +20,7 @@ plot_performance(b_0=np.array([0, 0, 1, 0]),
                  Cov=0.4**2*np.array([[1, 0, rho, 0], [0, 1, 0, rho], [rho, 0, 1, 0], [0, rho, 0, 1]]),
                  flasso=True,
                  A_flasso=Acustom(a=np.ones(4), b=1 * np.ones(3)),
-                 reducedOLS=False, # set True for reduced OLS
+                 reducedOLS=True, # set True for reduced OLS
                  sigma=0.4,
                  smooth=True,
                  legend=True)
