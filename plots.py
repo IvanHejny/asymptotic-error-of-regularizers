@@ -12,18 +12,18 @@ block_diag_matrix12 = np.block([[compound_block, np.zeros((3,3)), np.zeros((3,3)
 # We consider three different signal vectors b_0: a) [0,0,1,0], b) [1,1,1,1], c) [1,0,1,0]
 
 rho = 0.8
-plot_performance(b_0=np.array([0, 0, 1, 0]),
+plot_performance(b_0=np.array([1, 1, 1, 1]),
                  C=np.array([[1, 0, rho, 0], [0, 1, 0, rho], [rho, 0, 1, 0], [0, rho, 0, 1]]),
                  lambdas= np.array([1.6, 1.2, 0.8, 0.4]), #np.array([4, 0, 0, 0]),
                  x=np.linspace(0,1,20),
-                 n=1000, # increase for more accurate results, in the paper n=15000 was used
+                 n=15000, # increase for more accurate results, in the paper n=15000 was used
                  Cov=0.4**2*np.array([[1, 0, rho, 0], [0, 1, 0, rho], [rho, 0, 1, 0], [0, rho, 0, 1]]),
                  flasso=True,
                  A_flasso=Acustom(a=np.ones(4), b=1 * np.ones(3)),
                  reducedOLS=True, # set True for reduced OLS
                  sigma=0.4,
                  smooth=True,
-                 legend=True)
+                 legend=False)
 
 
 # Simulation study comparing asymptotic performance of Lasso, Fused Lasso, Concavified Fused Lasso and SLOPE

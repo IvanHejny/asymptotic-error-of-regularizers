@@ -83,39 +83,40 @@ def patternMSE(b_0, C, lambdas, n, Cov=None, genlasso=False, A = None, tol=1e-4)
 
 
 def reducedOLSerror(b_0, C, n=10000, sigma = 1):
+    p= len(b_0)
     U_b0_SLOPE = pattern_matrix(b_0)
     p_red_SLOPE = np.shape(U_b0_SLOPE)[1]
     redC_SLOPE = U_b0_SLOPE.T @ C @ U_b0_SLOPE  # reduced covariance matrix
-    redCinv_SLOPE = np.linalg.inv(redC_SLOPE)  # reduced error u_red has normal distribution with covariance sigma^2 * redCinv_SLOPE
+    redCinv_SLOPE = U_b0_SLOPE @ np.linalg.inv(redC_SLOPE) @ U_b0_SLOPE.T  # reduced error u_red has normal distribution with covariance sigma^2 * redCinv_SLOPE
 
     U_b0_Lasso = pattern_matrix_Lasso(b_0)
     p_red_Lasso = np.shape(U_b0_Lasso)[1]
     redC_Lasso = U_b0_Lasso.T @ C @ U_b0_Lasso  # reduced covariance matrix
-    redCinv_Lasso = np.linalg.inv(redC_Lasso)  # reduced error u_red has normal distribution with covariance sigma^2 * redCinv_Lasso
+    redCinv_Lasso = U_b0_Lasso @ np.linalg.inv(redC_Lasso) @ U_b0_Lasso.T  # reduced error u_red has normal distribution with covariance sigma^2 * redCinv_Lasso
 
     U_b0_Flasso = pattern_matrix_FLasso(b_0)
     p_red_Flasso = np.shape(U_b0_Flasso)[1]
     redC_Flasso = U_b0_Flasso.T @ C @ U_b0_Flasso  # reduced covariance matrix
-    redCinv_Flasso = np.linalg.inv(redC_Flasso)  # reduced error u_red has normal distribution with covariance sigma^2 * redCinv_Flasso
+    redCinv_Flasso = U_b0_Flasso @ np.linalg.inv(redC_Flasso) @ U_b0_Flasso.T  # reduced error u_red has normal distribution with covariance sigma^2 * redCinv_Flasso
 
     MSE_OLS = 0
     redMSE_SLOPE = 0
     redMSE_Lasso = 0
     redMSE_Flasso = 0
     for i in range(n):
-        u_OLS = np.random.multivariate_normal(np.zeros(len(b_0)), sigma ** 2 * np.linalg.inv(C))
+        u_OLS = np.random.multivariate_normal(np.zeros(p), sigma ** 2 * np.linalg.inv(C))
         norm2_OLS = np.linalg.norm(u_OLS) ** 2
         MSE_OLS = MSE_OLS + norm2_OLS
 
-        u_red_SLOPE = np.random.multivariate_normal(np.zeros(p_red_SLOPE), sigma**2 * redCinv_SLOPE)
+        u_red_SLOPE = np.random.multivariate_normal(np.zeros(p), sigma**2 * redCinv_SLOPE)
         norm2_SLOPE = np.linalg.norm(u_red_SLOPE) ** 2
         redMSE_SLOPE = redMSE_SLOPE + norm2_SLOPE
 
-        u_red_Lasso = np.random.multivariate_normal(np.zeros(p_red_Lasso), sigma**2 * redCinv_Lasso)
+        u_red_Lasso = np.random.multivariate_normal(np.zeros(p), sigma**2 * redCinv_Lasso)
         norm2_Lasso = np.linalg.norm(u_red_Lasso) ** 2
         redMSE_Lasso = redMSE_Lasso + norm2_Lasso
 
-        u_red_Flasso = np.random.multivariate_normal(np.zeros(p_red_Flasso), sigma**2 * redCinv_Flasso)
+        u_red_Flasso = np.random.multivariate_normal(np.zeros(p), sigma**2 * redCinv_Flasso)
         norm2_Flasso = np.linalg.norm(u_red_Flasso) ** 2
         redMSE_Flasso = redMSE_Flasso + norm2_Flasso
 
@@ -179,8 +180,7 @@ def plot_performance(b_0, C, lambdas, x, n, Cov=None, Lasso=True, SLOPE=True, fl
         for i in range(len(x)):
             if A_glasso is None:
                 A_glasso = Acustom(a=np.ones(len(b_0)), b=np.ones(len(b_0) - 1))
-            resultglasso = patternMSE(b_0=b_0, C=C, Cov=Cov, lambdas=x[i] * lambdas, n=n, genlasso=True,
-                                      A=x[i] * A_glasso)
+            resultglasso = patternMSE(b_0=b_0, C=C, Cov=Cov, lambdas=x[i] * lambdas, n=n, genlasso=True, A=x[i]*A_glasso)
             Mseglasso= np.append(Mseglasso, resultglasso[0])
             Pattglasso = np.append(Pattglasso, resultglasso[1])
         resultOLS = resultOLS + Mseglasso[0]
@@ -226,14 +226,14 @@ def plot_performance(b_0, C, lambdas, x, n, Cov=None, Lasso=True, SLOPE=True, fl
         plt.plot(x, PattSLOPE, label='recovery SLOPE', color='green', linestyle='dashed', lw=1.5)
     if flasso:
         plt.plot(x, Mseflasso, label='RMSE FLasso', color='orange', lw=1.5, alpha=0.9)
-        plt.plot(x, Pattflasso+0.02, label='recovery FLasso', color='orange', linestyle='dashed', lw=1.5, alpha = 0.8)
+        plt.plot(x, Pattflasso, label='recovery FLasso', color='orange', linestyle='dashed', lw=1.5, alpha = 0.8)
     if glasso:
         plt.plot(x, Mseglasso, label='RMSE ConFLasso', color='purple', lw=1.5, alpha=0.9)
         plt.plot(x, Pattglasso, label='recovery ConFLasso', color='purple', linestyle='dashed', lw=1.5, alpha = 0.8)
     if reducedOLS:
         reducedOLS = reducedOLSerror(b_0, C, n=100000, sigma=sigma)
         plt.scatter(-0.025, reducedOLS[1], color='blue', alpha=0.7, s=70)
-        plt.scatter(0, reducedOLS[2], color='orange', alpha=0.7, s=70)
+        plt.scatter(-0.025, reducedOLS[2], color='orange', alpha=0.7, s=70)
         plt.scatter(0, reducedOLS[3], color='green', alpha=0.7, s=70)
     plt.scatter(0, resultOLS, color='red', label='RMSE OLS', alpha=0.9, s=70)
 
