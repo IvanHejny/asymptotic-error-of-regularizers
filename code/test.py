@@ -1,6 +1,6 @@
 import unittest
-from solvers_slope import *
-from solvers_glasso import *
+from code.solvers_slope import *
+from code.solvers_glasso import *
 
 class test_solvers_slope(unittest.TestCase):
     def test_prox_slope_on_b_0_single_cluster(self):

@@ -1,4 +1,4 @@
-from solvers_plotters import *
+from code.solvers_plotters import *
 
 
 compound_block = comp_sym_corr(0.8, 3)
@@ -16,14 +16,14 @@ plot_performance(b_0=np.array([1, 1, 1, 1]),
                  C=np.array([[1, 0, rho, 0], [0, 1, 0, rho], [rho, 0, 1, 0], [0, rho, 0, 1]]),
                  lambdas= np.array([1.6, 1.2, 0.8, 0.4]), #np.array([4, 0, 0, 0]),
                  x=np.linspace(0,1,20),
-                 n=15000, # increase for more accurate results, in the paper n=15000 was used
+                 n=1000, # increase for more accurate results, in the paper n=15000 was used
                  Cov=0.4**2*np.array([[1, 0, rho, 0], [0, 1, 0, rho], [rho, 0, 1, 0], [0, rho, 0, 1]]),
                  flasso=True,
                  A_flasso=Acustom(a=np.ones(4), b=1 * np.ones(3)),
-                 reducedOLS=True, # set True for reduced OLS
+                 reducedOLS=False, # set True for reduced OLS
                  sigma=0.4,
                  smooth=True,
-                 legend=False)
+                 legend=True)
 
 
 # Simulation study comparing asymptotic performance of Lasso, Fused Lasso, Concavified Fused Lasso and SLOPE

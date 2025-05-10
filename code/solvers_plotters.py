@@ -1,5 +1,5 @@
-from solvers_slope import*
-from solvers_glasso import*
+from code.solvers_slope import*
+from code.solvers_glasso import*
 
 import matplotlib.pyplot as plt
 from scipy.interpolate import make_interp_spline
