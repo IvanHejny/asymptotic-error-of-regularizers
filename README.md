@@ -21,7 +21,7 @@ non-differentiable regularizers](https://arxiv.org/abs/2405.07677), where we exp
 
 2. **Create a virtual environment**  
    ```python
-   python -m venv venv
+   python3 -m venv venv
    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 
 3. **Install dependencies**  
@@ -30,7 +30,7 @@ non-differentiable regularizers](https://arxiv.org/abs/2405.07677), where we exp
 
 4. **Run plots**  
    ```python
-   python code/plots.py
+   python3 -m code.plots
 python code/plots.py 
 - Note: To reproduce the simulations from the paper, you need to modify the 'n' variable (e.g., set n = 15000) within the 'code/plots.py' script or a configuration file before running.
    
