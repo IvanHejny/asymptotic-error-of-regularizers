@@ -371,14 +371,14 @@ def pattern_matrix(vector):
   sign_matrix = np.diag(sign)
   vector = np.abs(vector)
   unique_values, counts = np.unique(vector[np.nonzero(vector)], return_counts=True)  # Get unique non-zero values and counts
-  pattern_matrix = np.zeros((len(unique_values), len(vector)))  # Initialize pattern matrix
+  pat_matrix = np.zeros((len(unique_values), len(vector)))  # Initialize pattern matrix
 
   for i, (value, count) in enumerate(zip(unique_values, counts)):
-    pattern_matrix[i, vector == value] = 1  # Set 1s for matching values in each cluster
+    pat_matrix[i, vector == value] = 1  # Set 1s for matching values in each cluster
     # Limit the number of 1s to the count of the unique value
     # pattern_matrix[i, pattern_matrix[i] == 1] = np.arange(1, count +1)  # Set unique markers for duplicates
 
-  return  (pattern_matrix @ sign_matrix).T  # .astype(int) convert to integer type
+  return  (pat_matrix @ sign_matrix).T  # .astype(int) convert to integer type
 
 def pattern_matrix_Lasso(vector):
   """Creates a Lasso pattern matrix for the input vector.
@@ -391,13 +391,13 @@ def pattern_matrix_Lasso(vector):
   """
   p=len(vector)
   m=np.count_nonzero(vector)
-  pattern_matrix = np.zeros((p, m))  # Initialize pattern matrix
+  pat_matrix = np.zeros((p, m))  # Initialize pattern matrix
   sign = np.sign(vector)
   sign_matrix = np.diag(sign)
   for i in range(m):
       row_index = np.nonzero(vector)[0][i]
-      pattern_matrix[row_index, i] = 1  # Set 1s for matching values in each cluste
-  return  sign_matrix @ pattern_matrix   # .astype(int) convert to integer type
+      pat_matrix[row_index, i] = 1  # Set 1s for matching values in each cluste
+  return  sign_matrix @ pat_matrix   # .astype(int) convert to integer type
 
 def consecutive_cluster_sizes(b0):
   """
@@ -450,9 +450,9 @@ def pattern_matrix_FLasso(vector):
       for j in range(cluster_sizes[i]):
           cluster_matrix[counter, i] = 1
           counter = counter + 1
-  pattern_matrix_Flasso = sign_matrix @ cluster_matrix
-  zero_cols = np.all(pattern_matrix_Flasso == 0, axis=0)
-  return  pattern_matrix_Flasso[:, ~ zero_cols] # removes zero columns
+  pat_matrix_Flasso = sign_matrix @ cluster_matrix
+  zero_cols = np.all(pat_matrix_Flasso == 0, axis=0)
+  return  pat_matrix_Flasso[:, ~ zero_cols] # removes zero columns
 
 def proj_onto_pattern_space(vector):
     """Projection matrix onto the (SLOPE) pattern space of some vector
